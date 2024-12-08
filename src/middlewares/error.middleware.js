@@ -10,7 +10,7 @@ export const errorHandler = (err, req, res, next) => { //siempre se manda estos 
         )
     }
 
-    //respuesta d eerror
+    //respuesta de error
     const errorResponse = {
         status: 'Error',
         message: err.message,
