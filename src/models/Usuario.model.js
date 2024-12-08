@@ -3,6 +3,7 @@ import { query } from '../config/db.config.js';
 import { DataBaseError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
 import { ValidationError } from '../errors/TypesError.js';
+import { createRecord } from '../utils/crud/crudUtils.js';
 
 
 export class Usuario {
@@ -81,23 +82,20 @@ export class Usuario {
     static async create(data) {
         try {
 
-            Usuario.validate(data) // antes de hacer cualquier cosa va a validar
+            //Usuario.validate(data) // antes de hacer cualquier cosa va a validar
 
-            const { nombre, apellido_paterno, apellido_materno, email, telefono } = data;
+            //para agregar id, active que se autogeneran, con createRecord no vienen esos datos
             const id = uuidv4();
             const active = true;
 
-            const insertQuery = `
-                INSERT INTO usuarios (id, nombre, apellido_paterno, apellido_materno, email, telefono, active)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING *;
-            `
-            const values = [id, nombre, apellido_paterno, apellido_materno, email, telefono, active];
+            const user = { id, ...data, active } //se construye objeto nuevo que tiene el id que se creo, todo el contenido de data y el active
 
-            const { rows } = await query(insertQuery, values);
-            return rows[0]
+            const userRecorded = await createRecord('usuarios', user) //va nombre de tabla (usuario) y la data en formato de objeto
+            return userRecorded
+
         } catch (error) {
             throw new DataBaseError('Error al registrar el usuario en la base de datos', error)
         }
     }
 }
+
