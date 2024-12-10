@@ -1,4 +1,4 @@
-import { ValidationError } from "../../errors/TypesError.js"
+import { InternalServerError, ValidationError } from "../../errors/TypesError.js"
 
 
 export class Validation {
@@ -97,4 +97,11 @@ export class Validation {
 
     return value;
   }
+
+  static isDataEmptyToDataBase(columns , values) {
+    if(values.length <= 0 || columns.length <= 0) {
+      throw new InternalServerError("No poemos crear registros vacios")
+  }
+   return {columns, values}
+}
 }

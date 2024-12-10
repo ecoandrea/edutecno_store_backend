@@ -14,3 +14,32 @@ export const createUser = async(req, res, next) => {
         next(error)
     }
 }
+
+export const findAllActiveUsers = async(req, res, next) => {
+    try {
+        const users = await Usuario.findAllActive()
+        res.json({
+            message: 'Usuarios encontrados con éxito',
+            status: 200,
+            data: users
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const findUserActiveById = async(req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const user = await Usuario.findActiveById(id)
+
+        res.status(200).json({
+            message: `Usuario con ID_ ${ id} Encontrado con éxito`,
+            status: 200,
+            data: user
+        })
+    } catch (error) {
+        next(error)
+    }
+}

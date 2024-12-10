@@ -3,7 +3,7 @@ import { query } from '../config/db.config.js';
 import { DataBaseError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
 import { ValidationError } from '../errors/TypesError.js';
-import { createRecord } from '../utils/crud/crudUtils.js';
+import { createRecord, findActiveRecordById, findAllActiveRecords } from '../utils/crud/crudUtils.js';
 
 
 export class Usuario {
@@ -97,5 +97,25 @@ export class Usuario {
             throw new DataBaseError('Error al registrar el usuario en la base de datos', error)
         }
     }
+
+    
+    static async findAllActive() {
+        try {
+            const users = await findAllActiveRecords('usuarios');
+            return users;
+        } catch (error) {
+            throw new DataBaseError(`Error al obtener los registros de los usuarios en la base de datos`, error);
+        }
+    }
+
+    static async findActiveById(id) {
+        try {
+            const user = await findActiveRecordById('usuarios', id);
+            return user;
+        } catch (error) {
+            throw new DataBaseError(`No pudimon encontrar el usuario con el id ${id}`, error);
+        }
+    }
+ 
 }
 
