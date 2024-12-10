@@ -1,5 +1,7 @@
-import { InternalServerError, ValidationError } from "../../errors/TypesError.js"
-
+import {
+  InternalServerError,
+  ValidationError,
+} from "../../errors/TypesError.js";
 
 export class Validation {
   static isNonEmptyString(value, fieldName) {
@@ -98,10 +100,10 @@ export class Validation {
     return value;
   }
 
-  static isDataEmptyToDataBase(columns , values) {
-    if(values.length <= 0 || columns.length <= 0) {
-      throw new InternalServerError("No poemos crear registros vacios")
+  static isDataEmptyToDataBase(columns, values) {
+    if (values.length <= 0 || columns.length <= 0) {
+      throw new InternalServerError("No poemos crear registros vacios");
+    }
+    return { columns, values };
   }
-   return {columns, values}
-}
 }
