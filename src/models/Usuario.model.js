@@ -1,13 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
-import { DataBaseError } from "../errors/TypesError.js";
+import { DataBaseError, ValidationError } from "../errors/TypesError.js";
 import { Validation } from "../utils/validate/Validate.js";
-import { ValidationError } from "../errors/TypesError.js";
 import {
   createRecord,
   findActiveRecordById,
   findAllActiveRecords,
-  findRecordByFilter,
-} from "../utils/crud/crudUtils.js";
+  findRecordByFilters,
+  permaDeleteRecord,
+  softDeleteRecord,
+  updateRecord,
+} from "../utils/crud/index.js";
 
 export class Usuario {
   constructor({
@@ -127,15 +129,12 @@ export class Usuario {
 
   static async findAllActive() {
     try {
-      const users = await findAllActiveRecords("usuarios");
-      return users;
+        const users = await findAllActiveRecords('usuarios');
+        return users;
     } catch (error) {
-      throw new DataBaseError(
-        `Error al obtener los registros de los usuarios en la base de datos`,
-        error
-      );
+        throw new DataBaseError(`Error al obtener los registros de los usuarios en la base de datos`, error);
     }
-  }
+}
 
   static async findActiveById(id) {
     try {
@@ -151,7 +150,7 @@ export class Usuario {
 
   static async find(filters, condition) {
     try {
-      const users = await findRecordByFilter("usuarios", filters, condition);
+      const users = await findRecordByFilters("usuarios", filters, condition);
       return users;
     } catch (error) {
       throw new DataBaseError(
@@ -161,6 +160,42 @@ export class Usuario {
 
                     y la condición ${condition}
                 `,
+        error
+      );
+    }
+  }
+
+  static async update(id, data) {
+    try {
+      const updatedUser = await updateRecord("usuarios", id, data);
+      return updatedUser;
+    } catch (error) {
+      throw new DataBaseError(
+        `No pudimos actualizar al usuario con el ID: ${id}`,
+        error
+      );
+    }
+  }
+
+  static async permaDelete(id) {
+    try {
+      const userDeleted = await permaDeleteRecord("usuarios", id);
+      return userDeleted;
+    } catch (error) {
+      throw new DataBaseError(
+        `No pudimos eliminar  permanentemente al usuario`,
+        error
+      );
+    }
+  }
+
+  static async softDelete(id) {
+    try {
+      const userDeleted = await softDeleteRecord("usuarios", id);
+      return userDeleted;
+    } catch (error) {
+      throw new DataBaseError(
+        `No pudimos eliminar  permanentemente al usuario`,
         error
       );
     }
